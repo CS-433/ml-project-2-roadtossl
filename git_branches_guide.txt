@@ -17,3 +17,5 @@ Guide des Branches Git
   - $ git branch -d nom_de_la_branche_a_supprimer
   - $ git push origin --delete nom_de_la_branche_a_supprimer 
 
+  Je suis noe
+
