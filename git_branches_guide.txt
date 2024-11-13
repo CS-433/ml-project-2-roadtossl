@@ -18,5 +18,4 @@ Guide des Branches Git
   - $ git push origin --delete nom_de_la_branche_a_supprimer
 
 6. Set up une branche avant le premier push :
-  - $ git push --set-upstream origin nico   
-
+  - $ git push --set-upstream origin nico
