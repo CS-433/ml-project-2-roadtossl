@@ -15,7 +15,8 @@ Guide des Branches Git
 
 5. Supprimer une branche (après fusion) : 
   - $ git branch -d nom_de_la_branche_a_supprimer
-  - $ git push origin --delete nom_de_la_branche_a_supprimer 
+  - $ git push origin --delete nom_de_la_branche_a_supprimer
 
-  Je suis noe
+6. Set up une branche avant le premier push :
+  - $ git push --set-upstream origin nico   
 
