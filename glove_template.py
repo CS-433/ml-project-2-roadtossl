@@ -6,6 +6,8 @@ import random
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from tqdm import tqdm
+
 
 
 def main():
@@ -18,7 +20,6 @@ def main():
     nmax = 100
     print("using nmax =", nmax, ", cooc.max() =", cooc.max())
 
-
     # Hyperparameters
     embedding_dim = 20
     alpha = 0.75
@@ -26,13 +27,13 @@ def main():
     epochs = 10
 
     # Create the vocabulary size from the co-occurrence data
-    vocab_size = max(max(row[0], row[1]) for row in cooc) + 1
+    vocab_size = max(cooc.row.max(), cooc.col.max()) + 1
 
     # Weighting function for co-occurrence
     def weighting_function(n, nmax=nmax, alpha=alpha):
         return min(1.0, (n / nmax) ** alpha)
 
-    # Neural network model
+    # Neural network GloVe model
     class GloVeNN(nn.Module):
         def __init__(self, vocab_size, embedding_dim):
             super(GloVeNN, self).__init__()
@@ -46,32 +47,42 @@ def main():
             return dot_product
 
     # Initialize the model, optimizer, and loss function
+    print("Initializing model...")
     model = GloVeNN(vocab_size, embedding_dim)
+    print("Initializing optimizer...")
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     # Training loop
+    print("Training started")
     for epoch in range(epochs):
+        print(f"Epoch {epoch + 1}/{epochs}...")
         epoch_loss = 0.0
-        for word_ix, context_ix, cooc in cooc:
-            # Convert to tensors
-            word_ix = torch.tensor([word_ix], dtype=torch.long)
-            context_ix = torch.tensor([context_ix], dtype=torch.long)
-            log_cooc = torch.tensor([torch.log(torch.tensor(cooc, dtype=torch.float32))], dtype=torch.float32)
-            weight = torch.tensor([weighting_function(cooc)], dtype=torch.float32)
 
-            # Forward pass
-            pred = model(word_ix, context_ix)  # Predicted log(co-occurrence)
+        # Use tqdm to wrap the inner loop
+        with tqdm(zip(cooc.row, cooc.col, cooc.data), total=len(cooc.data), desc=f"Epoch {epoch + 1}/{epochs}") as pbar:
+            for word_ix, context_ix, cooc in pbar:
+                # Convert to tensors
+                word_ix = torch.tensor([word_ix], dtype=torch.long)
+                context_ix = torch.tensor([context_ix], dtype=torch.long)
+                log_cooc = torch.tensor([torch.log(torch.tensor(cooc, dtype=torch.float32))], dtype=torch.float32)
+                weight = torch.tensor([weighting_function(cooc)], dtype=torch.float32)
 
-            # Loss computation
-            loss = weight * (pred - log_cooc) ** 2
-            epoch_loss += loss.item()
+                # Forward pass
+                pred = model(word_ix, context_ix)  # Predicted log(co-occurrence)
 
-            # Backward pass and optimization
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+                # Loss computation
+                loss = weight * (pred - log_cooc) ** 2
+                epoch_loss += loss.item()
 
-        print(f"Epoch {epoch + 1}/{epochs}, Loss: {epoch_loss:.4f}")
+                # Backward pass and optimization
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+                # Update the tqdm bar description with the current loss
+                pbar.set_postfix(loss=epoch_loss / (pbar.n + 1))
+
+        print(f"Epoch {epoch + 1}/{epochs}, Total Loss: {epoch_loss:.4f}")
 
     # Save embeddings
     word_embeddings = model.word_embeddings.weight.detach().numpy()
