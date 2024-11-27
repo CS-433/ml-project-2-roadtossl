@@ -47,14 +47,14 @@ def write_tweet_vectors(input_file: str, output_file: str) -> None:
 
     print(f"\nDone!\n")
 
+if __name__ == '__main__':
+    files_to_process = [
+        './data/twitter-datasets/train_pos.txt', 
+        './data/twitter-datasets/train_neg.txt', 
+        './data/twitter-datasets/train_pos_full.txt', 
+        './data/twitter-datasets/train_neg_full.txt'
+    ]
 
-files_to_process = [
-    './data/twitter-datasets/train_pos.txt', 
-    './data/twitter-datasets/train_neg.txt', 
-    './data/twitter-datasets/train_pos_full.txt', 
-    './data/twitter-datasets/train_neg_full.txt'
-]
-
-for file_to_process in files_to_process:
-    output_file = file_to_process.replace('.txt', '_embedding.txt')
-    write_tweet_vectors(file_to_process, output_file)
+    for file_to_process in files_to_process:
+        output_file = file_to_process.replace('.txt', '_embedding.txt')
+        write_tweet_vectors(file_to_process, output_file)
