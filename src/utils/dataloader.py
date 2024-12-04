@@ -7,6 +7,7 @@ NEG_SAMPLES_PATH = DATASET_PATH + 'train_neg.txt'
 POS_SAMPLES_PATH = DATASET_PATH + 'train_pos.txt'
 FULL_NEG_SAMPLES_PATH = DATASET_PATH + 'train_neg_full.txt'
 FULL_POS_SAMPLES_PATH = DATASET_PATH + 'train_pos_full.txt'
+TEST_SAMPLES_PATH = DATASET_PATH + 'test_data.txt'
 
 TRAIN_SPLIT = 0.8
 
@@ -56,4 +57,6 @@ def load_data(full=False):
 
     return train_data, test_data
 
-train_data, test_data = load_data(full=True)
+def load_submission_data():
+    test_samples = tf.data.TextLineDataset(TEST_SAMPLES_PATH)
+    return test_samples
