@@ -1,6 +1,5 @@
 import tensorflow as tf
 from tqdm import tqdm
-import subprocess
 
 DATASET_PATH = '../data/twitter-datasets/'
 NEG_SAMPLES_PATH = DATASET_PATH + 'train_neg.txt'
@@ -12,8 +11,8 @@ TEST_SAMPLES_PATH = DATASET_PATH + 'test_data.txt'
 TRAIN_SPLIT = 0.8
 
 def count_lines(filepath):
-    with open(filepath, 'r') as f:
-        return sum(1 for _ in f)
+        with open(filepath, 'r', errors='ignore') as f:
+            return sum(1 for _ in f)
 
 def load_data(full=False):
     neg_samples_path = FULL_NEG_SAMPLES_PATH if full else NEG_SAMPLES_PATH
