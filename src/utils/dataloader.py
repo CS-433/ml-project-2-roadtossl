@@ -55,8 +55,14 @@ def load_data(full=False):
 
     print(f'Loaded {train_data_size} training samples and {test_data_size} test samples')
 
-    return train_data, test_data
+    return train_data, test_data, train_data_size, test_data_size
 
 def load_submission_data():
+    """
+    Load the test samples from the submission data file.
+
+    Returns:
+        tf.data.TextLineDataset: Dataset containing test samples.
+    """
     test_samples = tf.data.TextLineDataset(TEST_SAMPLES_PATH)
     return test_samples
