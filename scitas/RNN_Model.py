@@ -43,17 +43,25 @@ def predict(model, dataset):
 
     return binary_predictions
 
+print("Loading data...")
 train_data, test_data, train_data_size, test_data_size = load_data(full=True)
+print("Data loaded.")
 
-VOCAB_SIZE = 15000
+VOCAB_SIZE = 5000
 BATCH_SIZE = 8
 EPOCHS = 10
 WORD_EMBEDDING_DIM = 128
 
+train_data = train_data.batch(BATCH_SIZE)
+test_data = test_data.batch(BATCH_SIZE)
+
+print("Creating encoder...")
 encoder = tf.keras.layers.TextVectorization(max_tokens=VOCAB_SIZE)
 encoder.adapt(train_data.map(lambda text, label: text))
+print("Encoder created.")
 
 # Model creation
+print("Creating model...")
 model = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(1,), dtype=tf.string),  # Add explicit input layer
     encoder,
@@ -63,13 +71,16 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(WORD_EMBEDDING_DIM, activation='relu'),
     tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(1)])
+print("Model created.")
 
 # Model compilation
+print("Compiling model...")
 model.compile(
     loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
     optimizer=tf.keras.optimizers.Adam(1e-4),
     metrics=['accuracy'],
 )
+print("Model compiled.")
 
 TRAIN_STEPS_PER_EPOCH = train_data_size // BATCH_SIZE
 TEST_STEPS = test_data_size // BATCH_SIZE
