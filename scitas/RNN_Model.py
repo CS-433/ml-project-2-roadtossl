@@ -3,17 +3,17 @@ import tensorflow as tf
 import pandas as pd
 
 # Add GPU configuration code at the start
-physical_devices = tf.config.list_physical_devices('GPU')
-if len(physical_devices) > 0:
-    try:
-        # Enable memory growth to prevent TensorFlow from allocating all GPU memory at once
-        for device in physical_devices:
-            tf.config.experimental.set_memory_growth(device, True)
-        print(f"Found {len(physical_devices)} GPU(s). GPU acceleration enabled.")
-    except RuntimeError as e:
-        print(f"Error configuring GPU devices: {e}")
-else:
-    print("No GPU devices found. Running on CPU.")
+# physical_devices = tf.config.list_physical_devices('GPU')
+# if len(physical_devices) > 0:
+#     try:
+#         # Enable memory growth to prevent TensorFlow from allocating all GPU memory at once
+#         for device in physical_devices:
+#             tf.config.experimental.set_memory_growth(device, True)
+#         print(f"Found {len(physical_devices)} GPU(s). GPU acceleration enabled.")
+#     except RuntimeError as e:
+#         print(f"Error configuring GPU devices: {e}")
+# else:
+#     print("No GPU devices found. Running on CPU.")
 
 
 from utils.dataloader import load_data, load_submission_data
@@ -43,18 +43,12 @@ def predict(model, dataset):
 
     return binary_predictions
 
-mixed_precision_policy = tf.keras.mixed_precision.Policy('mixed_float16')
-tf.keras.mixed_precision.set_global_policy(mixed_precision_policy)
-
 train_data, test_data, train_data_size, test_data_size = load_data(full=True)
 
 VOCAB_SIZE = 15000
 BATCH_SIZE = 8
 EPOCHS = 10
 WORD_EMBEDDING_DIM = 128
-
-train_data = train_data.batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
-test_data = test_data.batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
 
 encoder = tf.keras.layers.TextVectorization(max_tokens=VOCAB_SIZE)
 encoder.adapt(train_data.map(lambda text, label: text))
@@ -73,7 +67,7 @@ model = tf.keras.Sequential([
 # Model compilation
 model.compile(
     loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
-    optimizer=tf.keras.optimizers.Adam(3e-4),
+    optimizer=tf.keras.optimizers.Adam(1e-4),
     metrics=['accuracy'],
 )
 
