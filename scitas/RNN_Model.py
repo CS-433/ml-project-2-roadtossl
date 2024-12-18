@@ -3,7 +3,7 @@ os.system('nvidia-smi')
 import numpy as np
 import tensorflow as tf
 import pandas as pd
-from utils.dataloader import load_data, load_submission_data
+from utils.dataloader import load_data_seq, load_submission_data
 from utils.submission import write_submission
 
 # Print TensorFlow version and device information
@@ -31,7 +31,7 @@ def predict(model, dataset):
     return binary_predictions
 
 print("Loading data...")
-train_data, test_data, train_data_size, test_data_size = load_data(full=True)
+train_data, test_data, train_data_size, test_data_size = load_data_seq(full=True)
 print("Data loaded.")
 
 VOCAB_SIZE = 5000
