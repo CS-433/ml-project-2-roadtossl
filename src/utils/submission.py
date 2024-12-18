@@ -1,6 +1,6 @@
 import pandas as pd
 
-def write_submission(predictions, output_path="submission.csv"):
+def write_submission(predictions, output_path):
     """
     Write predictions to a CSV file in the required submission format.
 
@@ -16,4 +16,4 @@ def write_submission(predictions, output_path="submission.csv"):
 
     # Save the DataFrame to a CSV file without an index
     submission.to_csv(output_path, index=False)
-    print(f"Submission file saved to: {output_path}")
+    print(f"Submission file saved to: {output_path} ✔️")

@@ -7,7 +7,7 @@ import random
 
 def main():
     print("loading cooccurrence matrix")
-    with open("../../data/vocab/cooc.pkl", "rb") as f:
+    with open("../data/init/cooc.pkl", "rb") as f:
         cooc = pickle.load(f)
     print("{} nonzero entries".format(cooc.nnz))
 
@@ -33,8 +33,8 @@ def main():
             scale = 2 * eta * fn * (logn - np.dot(x, y))
             xs[ix, :] += scale * y
             ys[jy, :] += scale * x
-    np.save("../../data/SGD_embeddings", xs)
+    np.save("../data/init/SGD_embeddings", xs)
 
 
-if __name__ == "__main__":
+def run():
     main()

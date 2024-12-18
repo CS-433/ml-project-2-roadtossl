@@ -1,6 +1,5 @@
 import sys
 import os
-import numpy as np
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 
 import tensorflow as tf
@@ -15,14 +14,14 @@ class RecurrentNeuralNetwork():
     Recurrent Neural Network Classifier (using TensorFlow)
     """
 
-    def __init__(self, vocab_size=15000, word_embedding_dim=128, batch_size=64, epochs=10):
+    def __init__(self, vocab_size=15000, word_embedding_dim=128, batch_size=8, epochs=10):
         self.vocab_size = vocab_size
         self.word_embedding_dim = word_embedding_dim
         self.batch_size = batch_size
         self.epochs = epochs
         
 
-    def predict(model, dataset):
+    def predictions(self, model, dataset):
         """
         Predict the binary sentiment of text data from a dataset.
 
@@ -53,13 +52,15 @@ class RecurrentNeuralNetwork():
         print(f"Batch size: {self.batch_size}")
         print(f"Epochs: {self.epochs}")
 
+        train_data = train_data.batch(self.batch_size)
+        test_data = test_data.batch(self.batch_size)
+
         print("Creating Encoder...")
         encoder = tf.keras.layers.TextVectorization(max_tokens=self.vocab_size)
         encoder.adapt(train_data.map(lambda text, label: text))
-        print("Encoder created.")
-        print(f"    Vocabulary size: {len(encoder.get_vocabulary())}")
+        print(f"Encoder created with vocabulary size: {len(encoder.get_vocabulary())} ✔️")
 
-        print("Creating model...")
+        print("Creating model...", end="\r")
         model = tf.keras.Sequential([
             tf.keras.layers.Input(shape=(1,), dtype=tf.string),
             encoder,
@@ -69,21 +70,20 @@ class RecurrentNeuralNetwork():
             tf.keras.layers.Dense(self.word_embedding_dim, activation='relu'), 
             tf.keras.layers.Dropout(0.5),
             tf.keras.layers.Dense(1)])
-        print("Model created.")
+        print("Model created ✔️   ")
 
-        print("Compiling model...")
+        print("Compiling model...", end="\r")
         # Model compilation
         model.compile(
             loss=tf.keras.losses.BinaryCrossentropy(from_logits=True), 
             optimizer=tf.keras.optimizers.Adam(1e-4), 
             metrics=['accuracy'],
         )
-        print("Model compiled.")
+        print("Model compiled ✔️   ")
 
         TRAIN_STEPS_PER_EPOCH = train_data_size // self.batch_size
         TEST_STEPS = test_data_size // self.batch_size
 
-        print("Training model...")
         model.fit(
             train_data.repeat(), 
             epochs=self.epochs,
@@ -92,7 +92,6 @@ class RecurrentNeuralNetwork():
             validation_steps=TEST_STEPS,
             callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2, restore_best_weights=True)]
         )
-        print("Model trained.")
 
         print("Evaluating model...")
         test_loss, test_acc = model.evaluate(test_data, steps=TEST_STEPS)
@@ -107,10 +106,6 @@ class RecurrentNeuralNetwork():
         submision_data = load_submission_data()
 
         # Predict the sentiment of the submission data
-        predictions = predict(model, submision_data)
+        predictions = self.predictions(model, submision_data)
 
-        write_submission(predictions, '../../../data/submission/submission.csv')
-
-model: RecurrentNeuralNetwork = RecurrentNeuralNetwork(vocab_size=10000)
-train_data, test_data, train_data_size, test_data_size = load_data_seq(False)
-model.train(train_data, test_data, train_data_size, test_data_size)
+        return predictions

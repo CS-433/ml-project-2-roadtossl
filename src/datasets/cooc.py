@@ -5,12 +5,12 @@ import pickle
 
 
 def main():
-    with open("../../data/vocab/vocab.pkl", "rb") as f:
+    with open("../data/init/vocab.pkl", "rb") as f:
         vocab = pickle.load(f)
 
     data, row, col = [], [], []
     counter = 1
-    for fn in ["../../data/twitter-datasets/train_pos.txt", "../../data/twitter-datasets/train_neg.txt"]:
+    for fn in ["../data/twitter-datasets/train_pos.txt", "../data/twitter-datasets/train_neg.txt"]:
         with open(fn) as f:
             for line in f:
                 tokens = [vocab.get(t, -1) for t in line.strip().split()]
@@ -27,9 +27,9 @@ def main():
     cooc = coo_matrix((data, (row, col)))
     print("summing duplicates (this can take a while)")
     cooc.sum_duplicates()
-    with open("../../data/vocab/cooc.pkl", "wb") as f:
+    with open("../data/init/cooc.pkl", "wb") as f:
         pickle.dump(cooc, f, pickle.HIGHEST_PROTOCOL)
 
 
-if __name__ == "__main__":
+def run():
     main()

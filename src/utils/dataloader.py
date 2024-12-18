@@ -27,13 +27,10 @@ def count_lines(filepath):
         return sum(1 for _ in f)
 
 def load_data_seq(full=False):
+    print("Loading Data...", end="\r")
     neg_samples_path = FULL_NEG_SAMPLES_PATH if full else NEG_SAMPLES_PATH
     pos_samples_path = FULL_POS_SAMPLES_PATH if full else POS_SAMPLES_PATH
 
-    # Print the current path
-    print(f'Current path: {os.path.abspath(os.path.dirname(__file__))}')
-
-    # Count lines using wc -l
     neg_size = count_lines(neg_samples_path)
     pos_size = count_lines(pos_samples_path)
 
@@ -67,7 +64,7 @@ def load_data_seq(full=False):
     train_data = train_data.shuffle(buffer_size=train_data_size, reshuffle_each_iteration=False)
     test_data = test_data.shuffle(buffer_size=test_data_size, reshuffle_each_iteration=False)
 
-    print(f'Loaded {train_data_size} training samples and {test_data_size} test samples')
+    print(f'Loaded {train_data_size} training samples and {test_data_size} test samples ✔️\n')
 
     return train_data, test_data, train_data_size, test_data_size
 
@@ -92,6 +89,7 @@ def load_embeddings(filename):
     return embeddings
 
 def load_data_mean(full=False):
+    print("Loading Data...", end="\r")
     filename_pos = FULL_POS_MEAN_SAMPLES_PATH if full else POS_MEAN_SAMPLES_PATH
     filename_neg = FULL_NEG_MEAN_SAMPLES_PATH if full else NEG_MEAN_SAMPLES_PATH
 
@@ -114,6 +112,8 @@ def load_data_mean(full=False):
     np.random.shuffle(indices)
     train_padded = train_padded[indices]
     train_labels = train_labels[indices]
+
+    print("Data Loaded ✔️  \n")
 
     return train_padded, train_labels
 

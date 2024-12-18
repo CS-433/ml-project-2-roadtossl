@@ -6,6 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+from src.utils.dataloader import load_data_mean
 from tqdm import tqdm
 
 class NeuralNetwork():
@@ -32,6 +33,9 @@ class NeuralNetwork():
         
         
         # Post-training Evaluation
-        y_pred = self.predict(X_test)
+        y_pred = self.model.predict(X_test)
         print("\nClassification Report:")
         print(classification_report(y_test, y_pred))
+
+        y_pred = [-1 if i == 0 else i for i in y_pred]
+        return y_pred

@@ -30,10 +30,10 @@ def write_tweet_vectors(input_file: str, output_file: str) -> None:
     if input_file == output_file:
         raise ValueError('Input and output files must be different')
     
-    print(f"Creating vectors from strings from '{input_file}' into '{output_file}'...")
+    print(f"Creating average vector for each tweet from '{input_file}' into '{output_file}'...")
 
-    vocab = np.load('../../data/vocab.pkl', allow_pickle=True)
-    embeddings = np.load('../../data/SGD_embeddings.npy')
+    vocab = np.load('../data/init/vocab.pkl', allow_pickle=True)
+    embeddings = np.load('../data/init/SGD_embeddings.npy')
 
     nb_lines = sum(1 for _ in open(input_file, 'r', errors='ignore'))
 
@@ -47,12 +47,12 @@ def write_tweet_vectors(input_file: str, output_file: str) -> None:
 
     print(f"\nDone!\n")
 
-if __name__ == '__main__':
+def run():
     files_to_process = [
-        '../../data/twitter-datasets/train_pos.txt', 
-        '../../data/twitter-datasets/train_neg.txt', 
-        '../../data/twitter-datasets/train_pos_full.txt', 
-        '../../data/twitter-datasets/train_neg_full.txt'
+        '../data/twitter-datasets/train_pos.txt', 
+        '../data/twitter-datasets/train_neg.txt', 
+        '../data/twitter-datasets/train_pos_full.txt', 
+        '../data/twitter-datasets/train_neg_full.txt'
     ]
 
     for file_to_process in files_to_process:
