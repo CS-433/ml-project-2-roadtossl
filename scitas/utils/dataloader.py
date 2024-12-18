@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tqdm import tqdm
 
-DATASET_PATH = '../data/twitter-datasets/'
+DATASET_PATH = 'data/twitter-datasets/'
 NEG_SAMPLES_PATH = DATASET_PATH + 'train_neg.txt'
 POS_SAMPLES_PATH = DATASET_PATH + 'train_pos.txt'
 FULL_NEG_SAMPLES_PATH = DATASET_PATH + 'train_neg_full.txt'
