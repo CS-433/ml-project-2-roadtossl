@@ -55,7 +55,7 @@ class RecurrentNeuralNetwork():
         train_data = train_data.batch(self.batch_size)
         test_data = test_data.batch(self.batch_size)
 
-        print("Creating Encoder...")
+        print("Creating Encoder...(This may take a while)")
         encoder = tf.keras.layers.TextVectorization(max_tokens=self.vocab_size)
         encoder.adapt(train_data.map(lambda text, label: text))
         print(f"Encoder created with vocabulary size: {len(encoder.get_vocabulary())} ✔️")
