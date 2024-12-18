@@ -23,7 +23,7 @@ TEST_SAMPLES_PATH = os.path.join(DATASET_PATH, 'test_data.txt')
 TRAIN_SPLIT = 0.8
 
 def count_lines(filepath):
-    with open(filepath, 'r') as f:
+    with open(filepath, 'r', errors='ignore') as f:
         return sum(1 for _ in f)
 
 def load_data_seq(full=False):
