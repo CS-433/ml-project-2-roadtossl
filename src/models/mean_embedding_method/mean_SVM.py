@@ -20,5 +20,3 @@ class ClassifierAverageSVM(SKLearnModel):
         y_pred = self.model.predict(X_test)
         print("Classification Report:")
         print(classification_report(y_test, y_pred))
-
-    
