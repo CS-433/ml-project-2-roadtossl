@@ -43,7 +43,7 @@ All the code that manage file storage/loading is stored in the `/src/utils` fold
 ```
 
 #### 4. Data Storage
-All the files that contains data are stored are stored within the `/data` folder. The structure is as follows: 
+All the files that contains data are stored within the `/data` folder. The structure is as follows: 
 ```
 /data
 │

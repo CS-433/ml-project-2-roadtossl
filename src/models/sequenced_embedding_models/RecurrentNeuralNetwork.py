@@ -15,6 +15,21 @@ class RecurrentNeuralNetwork():
     """
 
     def __init__(self, vocab_size=15000, word_embedding_dim=128, batch_size=8, epochs=10):
+        """
+        Initialize the RecurrentNeuralNetwork model
+
+        Parameters:
+        - vocab_size: int
+            Size of the vocabulary
+        - word_embedding_dim: int
+            Dimension of the word embeddings
+        - batch_size: int
+            Number of samples per gradient update
+        - epochs: int
+            Number of epochs to train the model
+        """
+
+        # Save the hyperparameters as attributes
         self.vocab_size = vocab_size
         self.word_embedding_dim = word_embedding_dim
         self.batch_size = batch_size
@@ -47,19 +62,23 @@ class RecurrentNeuralNetwork():
 
     def train(self, train_data, test_data, train_data_size, test_data_size):
 
+        # Print the hyperparameters
         print(f"Vocabulary size: {self.vocab_size}")
         print(f"Word embedding dimension: {self.word_embedding_dim}")
         print(f"Batch size: {self.batch_size}")
         print(f"Epochs: {self.epochs}")
 
+        # Load the training and testing data
         train_data = train_data.batch(self.batch_size)
         test_data = test_data.batch(self.batch_size)
 
+        # Create the encoder
         print("Creating Encoder...(This may take a while)")
         encoder = tf.keras.layers.TextVectorization(max_tokens=self.vocab_size)
         encoder.adapt(train_data.map(lambda text, label: text))
         print(f"Encoder created with vocabulary size: {len(encoder.get_vocabulary())} ✔️")
 
+        # Create the model
         print("Creating model...", end="\r")
         model = tf.keras.Sequential([
             tf.keras.layers.Input(shape=(1,), dtype=tf.string),
@@ -72,8 +91,8 @@ class RecurrentNeuralNetwork():
             tf.keras.layers.Dense(1)])
         print("Model created ✔️   ")
 
+        # Compile the model
         print("Compiling model...", end="\r")
-        # Model compilation
         model.compile(
             loss=tf.keras.losses.BinaryCrossentropy(from_logits=True), 
             optimizer=tf.keras.optimizers.Adam(1e-4), 
@@ -81,6 +100,8 @@ class RecurrentNeuralNetwork():
         )
         print("Model compiled ✔️   ")
 
+        # Train the model
+        print("Training model...", end = "\r")
         TRAIN_STEPS_PER_EPOCH = train_data_size // self.batch_size
         TEST_STEPS = test_data_size // self.batch_size
 
@@ -92,13 +113,17 @@ class RecurrentNeuralNetwork():
             validation_steps=TEST_STEPS,
             callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=2, restore_best_weights=True)]
         )
+        print("Model trained ✔️   ")
 
+        # Evaluate the model
         print("Evaluating model...")
         test_loss, test_acc = model.evaluate(test_data, steps=TEST_STEPS)
 
+        # Print the test loss and accuracy
         print('Test Loss:', test_loss)
         print('Test Accuracy:', test_acc)
 
+        # Path to the dataset
         DATASET_PATH = 'data/twitter-datasets/'
         TEST_SAMPLES_PATH = DATASET_PATH + 'test_data.txt'
 

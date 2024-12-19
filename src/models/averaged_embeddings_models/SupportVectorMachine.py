@@ -13,18 +13,52 @@ class SupportVectorMachine():
     """
 
     def __init__(self, kernel='rbf', random_state=42):
+        """
+        Initialize the SupportVectorMachine model
+
+        Parameters:
+        - kernel: str
+            Specifies the kernel type to be used in the algorithm
+        - random_state: int
+            Random seed for reproducibility
+        """
+
+        # Initialize the model
         model = SVC(kernel=kernel, random_state=random_state, verbose=True)
+
+        # Save the model as an attribute
         self.model = model
 
     def train(self, X, y):
+        """
+        Train the SupportVectorMachine model and make predictions
+
+        Parameters:
+        - X: np.ndarray
+            Features
+        - y: np.ndarray
+            Labels
+
+        Returns:
+        - y_pred: np.ndarray
+            Predictions
+        """
+
+        # Split the data into training and testing sets
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
+        # Train the model
         self.model.fit(X_train, y_train)
         
+        # Make predictions
         y_pred = self.model.predict(X_test)
+
+        # Print the classification report
         print("Classification Report:")
         print(classification_report(y_test, y_pred))
 
+        # Convert the predictions to the required format
         y_pred = [-1 if i == 0 else i for i in y_pred]
+        
         return y_pred
 

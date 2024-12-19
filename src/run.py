@@ -18,11 +18,14 @@ model_type = RecurrentNeuralNetwork # Set to one of the following: GradientBoost
 full_dataset = True # Set to True to use the full dataset for training (may take a long time for the entire dataset)
 force_generation = False # Set to True to force the generation of all required files each time the script is run
 
+# Initialize model and submission variables
 model = None
 submission = None
 
+# Generate all required files
 generate_all_required_files(force_generation=force_generation)
 
+# Check if a model type is specified
 if model_type is None:
     print("Please specify a model type. To do so, set the 'model_type' variable to one of the following:")
     print("  - GradientBoosting (Averaged-Based Model)")
@@ -36,9 +39,13 @@ if model_type is None:
 # Sequenced-Based Model
 if model_type is RecurrentNeuralNetwork:
     # Hyperparameters can be passed here. Default values are used if not specified.
-    # -> vocab_size=15000, word_embedding_dim=128, batch_size=64, epochs=10
+    # Default Values: vocab_size=15000, word_embedding_dim=128, batch_size=64, epochs=10
     model = RecurrentNeuralNetwork()
+
+    # Load the data
     train_data, test_data, train_data_size, test_data_size = load_data_seq(full=full_dataset)
+
+    # Train the model and make predictions
     print(f"Training {model_type.__name__}...\n")
     submission = model.train(train_data, test_data, train_data_size, test_data_size)
     print("Training complete ✔️\n")
@@ -46,28 +53,34 @@ if model_type is RecurrentNeuralNetwork:
 
 # Averaged-Based Model
 else:
+    # Load the data for the Averaged-Based Models (mean embeddings for each tweet)
     X, y = load_data_mean(full=full_dataset)
 
+    # Initialize the GradientBoosting model
     if model_type is GradientBoosting:
         # Hyperparameters can be passed here. Default values are used if not specified.
-        # -> use_label_encoder=False, eval_metric='logloss'
+        # Default Values: use_label_encoder=False, eval_metric='logloss'
         model = GradientBoosting()
     
+    # Initialize the LogisticRegression model
     elif model_type is LogisticRegression:
         # Hyperparameters can be passed here. Default values are used if not specified.
-        # -> max_iter=100000
+        # Default Values: max_iter=100000
         model = LogisticRegression()
     
+    # Initialize the SupportVectorMachine model
     elif model_type is SupportVectorMachine:
         # Hyperparameters can be passed here. Default values are used if not specified.
-        # -> kernel='rbf', random_state=42
+        # Default Values: kernel='rbf', random_state=42
         model = SupportVectorMachine()
     
+    # Initialize the NeuralNetwork model
     elif model_type is NeuralNetwork:
         # Hyperparameters can be passed here. Default values are used if not specified.
-        # -> hidden_layer_sizes=(100,), max_iter=200, random_state=42
+        # Default Values: hidden_layer_sizes=(100,), max_iter=200, random_state=42
         model = NeuralNetwork()
     
+    # Train the model and make predictions
     print(f"Training {model_type.__name__}...\n")
     submission = model.train(X, y)
     print("Training complete ✔️\n")
