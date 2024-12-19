@@ -75,7 +75,7 @@ All the files that contains data are stored within the `/data` folder. The struc
 ## Run Setup
 As is, the `src/run.py` file generates the submission file that performed the best score on _aicrowd.com_. But it is very simple to change the parameters of it to train another model. Here are the possible modifications:
 - `model_type` - default value = `RecurrentNeuralNetwork`, can be changed to `GradientBoosting`, `LogisticRegression`, `SupportVectorMachine` or `NeuralNetwork`
-- `full_dataset` - default to `False`, can be changed to `True` (recommended to have a faster execution time)
+- `full_dataset` - default to `True`, can be changed to `False` (recommended to have a faster execution time)
 - `force_generation` - default to `False`, can be changed to `True` (not recommended)
 - Model Hyperparameters - every initialized model (e.g. `model = GradientBoosting()`) has default hyperparameters that can be changed easily. 
 
