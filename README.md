@@ -83,12 +83,20 @@ As is, the `src/run.py` file generates the submission file that performed the be
 
 In order to run the code and access to the `.csv` submission files, it is required to execute the following steps:
 
-1. In your terminal, navigate to the `/src` directory and enter the following:
+1. Install the following python libraries (`pip install <library name>`)
+- numpy
+- pandas
+- xgboost
+- scikit-learn
+- tensorflow
+- tqdm
+
+2. In your terminal, navigate to the `/src` directory and enter the following:
 ```bash
 python run.py
 ```
 _**Important Note 1**: the first time this script is executed, all required files will be generated and stored in the `data` folder. This may take a while._\
 _**Important Note 2**: The default training execution time is very long (>10 hours) and was previously run on the EPFL Scitas server. It is very recommended to modifiy the run.py script parameters to test the model on the small dataset._
 
-2. Once the script has finished, it should have stored the `.csv` file inside the `data/submission` folder. The naming of the submission files varies depending on the model and dataset used.\
+3. Once the script has finished, it should have stored the `.csv` file inside the `data/submission` folder. The naming of the submission files varies depending on the model and dataset used.\
     submission files are named as follows: `<Model Name>_<Dataset Type>.csv`
